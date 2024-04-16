@@ -1,3 +1,4 @@
+require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -8,12 +9,13 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const passport = require('passport-local');
 
-
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const signUpRouter = require('./routes/signUp');
 
 const app = express();
+
+mongoose.connect(process.env.DB_URL);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
