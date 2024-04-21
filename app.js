@@ -7,8 +7,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
-const passport = require('passport-local');
-
+const passport = require('passport');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const signUpRouter = require('./routes/signUp');
@@ -16,6 +15,8 @@ const signUpRouter = require('./routes/signUp');
 const app = express();
 
 mongoose.connect(process.env.DB_URL);
+
+require('./config/passport');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,9 +27,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session());
-app.use(bcrypt());
-app.use(passport());
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
