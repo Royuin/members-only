@@ -9,9 +9,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/sign-up', userController.signUpGet); 
-
-// router.post('/sign-up', expressAsyncHandler( async (req, res, next) {
-//
-// }));
+router.post('/sign-up', userController.signUpPost);
 
 module.exports = router;
