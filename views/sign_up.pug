@@ -4,17 +4,17 @@ block content
 
   h1= title
 
-  form(method=POST)
+  form(method='POST')
     label(for='firstName') First Name:
-    input(type='text', id='firstName', for='firstName', name='firstName')
+    input(type='text', id='firstName', for='firstName', name='firstName', minlength='3', required)
 
     label(for='lastName') Last Name:
-    input(type='text', id='lastName', for='lastName', name='lastName')
+    input(type='text', id='lastName', for='lastName', name='lastName', minLength='3', required)
     
     label(for='username') Username:
-    input(type='text', id='username', for='username', name='username')
+    input(type='text', id='username', for='username', name='username', minLength='4', required)
 
     label(for='password') Password:
-    input(type='text', id='password', for='password', name='password')
+    input(type='text', id='password', for='password', name='password', minLength='4', required)
 
     button(type='submit') Submit
