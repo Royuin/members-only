@@ -3,6 +3,12 @@ const User = require('../models/user');
 const asyncHandler = require('express-async-handler');
 const genPassword = require('../lib/passwordUtils').genPassword;
 
+exports.logInGet = (req, res, next) => {
+  res.render('log_in', {
+    title: 'Log In',
+  });
+}
+
 exports.signUpGet = (req, res, next) => { 
   res.render('sign_up', {
     title: 'Sign Up',
