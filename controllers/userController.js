@@ -10,24 +10,48 @@ exports.signUpGet = (req, res, next) => {
 };
 
 exports.signUpPost =  [
-  body('firstName', 'First name must not be empty.').trim().escape(),
-  body('lastName', 'Last name must not be empty.').trim().escape(),
+  body('firstName', 'First name must not be empty.').trim().notEmpty().escape(),
+  body('lastName', 'Last name must not be empty.').trim().notEmpty().escape(),
   body('username', 'Username must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
   body('password', 'Password must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
-  
-  asyncHandler( async (req, res, next) => {
-   const errors = validationResult(req);
-   const hash = await genPassword(req.body.password);
-  
-   const newUser = new User({
-     firstName: req.body.firstName,
-     lastName: req.body.lastName,
-     username: req.body.username,
-     hash: hash,
-     member: false,
-     });
 
-    await newUser.save();
-    res.redirect('/sign-up');
+  asyncHandler( async (req, res, next) => {
+    const errors = validationResult(req);
+    const userExists = await User.findOne({username: req.body.username});
+    
+    if (!errors.isEmpty()) {
+      res.render('sign_up', {
+        title: 'Sign Up',
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        username: req.body.username,
+        password: req.body.password,
+        errors: errors.array(),
+      });
+      return;
+    } else if (userExists) {
+      res.render('sign_up', {
+        title: 'Sign Up',
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        username: req.body.username,
+        password: req.body.password,
+        userExists: userExists, 
+      });
+      return;
+    } else {
+      const hash = await genPassword(req.body.password);
+
+      const newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        username: req.body.username,
+        hash: hash,
+        member: false,
+      });
+
+      await newUser.save();
+      res.redirect('/');
+    }
   }),
 ];
