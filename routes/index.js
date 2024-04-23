@@ -8,6 +8,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Members Only' });
 });
 
+router.get('/log-in', userController.logInGet);
+
 router.get('/sign-up', userController.signUpGet); 
 router.post('/sign-up', userController.signUpPost);
 
