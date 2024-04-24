@@ -1,0 +1,17 @@
+extends layout
+
+block content
+
+  a(href='/') Home
+
+  h1= title
+
+  form(method='POST')
+    label(for='username') Username:
+    input(id='username', name='username', for='username')
+
+    label(for='password') Password:
+    // CHANGE THIS TO PASSWORD INPUT AFTER FUNCTIONALITY IS ADDED
+    input(id='password', name='password', for='password')
+
+    button(type='submit') Log In
