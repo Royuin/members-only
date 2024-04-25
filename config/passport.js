@@ -1,25 +1,46 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
+const  { validatePassword }  = require('../lib/passwordUtils');
 
-const verifyCallback = (username, password, done) => {
-  User.findOne({ username: username })
-    .then((user) => {
-      if (!user) {return done(null, false) }
+async function verifyCallback (username, password, done) {
+  const user = await User.findOne({ username: username })
+  if (!user) {return done(null, false) }
 
-      const isValid = validPassword(password, user.hash, user.salt);
+  const isValid = validatePassword(password, user.hash);
 
-      if (isValid) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
-    })
-    .catch((err) => {
-      done(err);
-      });
+  if (isValid) {
+    return done(null, user);
+  } else if (!isValid) {
+    return done(null, false);
+  }
+
+  if (err) {
+    done(err);
+  };
 }
 
 const strategy = new LocalStrategy(verifyCallback);
+
+passport.serializeUser(function(user, done) {
+  process.nextTick(function() {
+    return done(null, {
+      id: user.id,
+      username: user.username,
+    });
+  });
+  // done(null, user.id);
+});
+
+passport.deserializeUser(function(user, done) {
+  process.nextTick(function() {
+    return done(null, user);
+  });
+  // User.findById(userId)
+  //   .then((user) => {
+  //     done(null, user);
+  //   })
+  //   .catch(err => done(err))
+});
 
 passport.use(strategy);  
