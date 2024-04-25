@@ -23,24 +23,14 @@ async function verifyCallback (username, password, done) {
 const strategy = new LocalStrategy(verifyCallback);
 
 passport.serializeUser(function(user, done) {
-  process.nextTick(function() {
-    return done(null, {
-      id: user.id,
-      username: user.username,
-    });
-  });
-  // done(null, user.id);
+  done(null, user.id);
 });
 
-passport.deserializeUser(function(user, done) {
-  process.nextTick(function() {
-    return done(null, user);
-  });
-  // User.findById(userId)
-  //   .then((user) => {
-  //     done(null, user);
-  //   })
-  //   .catch(err => done(err))
+passport.deserializeUser(function(userId, done) {
+  User.findById(userId)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch(err => done(err))
 });
-
 passport.use(strategy);  
