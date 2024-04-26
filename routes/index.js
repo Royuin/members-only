@@ -6,7 +6,10 @@ const passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Members Only' });
+  res.render('index', {
+    title: 'Members Only',
+    user: req.user,
+  });
 });
 
 router.get('/log-in', userController.logInGet);
