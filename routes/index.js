@@ -2,6 +2,7 @@ var express = require('express');
 const expressAsyncHandler = require('express-async-handler');
 var router = express.Router();
 const userController = require('../controllers/userController');
+const messageController = require('../controllers/messageController');
 const passport = require('passport');
 
 /* GET home page. */
@@ -17,5 +18,7 @@ router.post('/log-in', passport.authenticate('local', { failureRedirect: '/log-i
 
 router.get('/sign-up', userController.signUpGet); 
 router.post('/sign-up', userController.signUpPost);
+
+router.get('/create-message', messageController.createMessageGet);
 
 module.exports = router;
