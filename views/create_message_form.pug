@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1= title
+
+  form(method='POST')
+    label(for='title') Title:
+    input(id='title', name='title', for='name')
+
+    label(for='message') Message:
+    textarea(id='message', name='message', for='message', rows='4', cols='40')
+
+    button(type='submit') Submit
