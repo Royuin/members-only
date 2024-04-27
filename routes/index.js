@@ -20,5 +20,6 @@ router.get('/sign-up', userController.signUpGet);
 router.post('/sign-up', userController.signUpPost);
 
 router.get('/create-message', messageController.createMessageGet);
+router.post('/create-message', messageController.createMessagePost);
 
 module.exports = router;
