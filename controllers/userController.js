@@ -2,12 +2,20 @@ const { body, validationResult } = require('express-validator');console.log
 const User = require('../models/user');
 const asyncHandler = require('express-async-handler');
 const genPassword = require('../lib/passwordUtils').genPassword;
+const passport = require('passport');
 
 exports.logInGet = (req, res, next) => {
   res.render('log_in', {
     title: 'Log In',
   });
 }
+
+exports.logOut = (req, res, next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+};
 
 exports.signUpGet = (req, res, next) => { 
   res.render('sign_up', {
@@ -59,8 +67,11 @@ exports.signUpPost =  [
         member: false,
       });
 
+      // MAKE USER AUTOMATICALLY LOGIN WHEN ACCOUNT IS CREATED
       await newUser.save();
-      res.redirect('/');
+      passport.authenticate('local', { failureRedirect: '/log-in', successRedirect: '/' })
+      req.login
+      // res.redirect('/');
     }
   }),
 ];
