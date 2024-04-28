@@ -17,7 +17,10 @@ block content
     input(type='text', id='username', for='username', name='username', minLength='4', required, value=username ? username : '',)
 
     label(for='password') Password:
-    input(type='text', id='password', for='password', name='password', minLength='4', required, value=password ? password : '',)
+    input(type='password', id='password', for='password', name='password', minLength='4', required, value=password ? password : '',)
+
+    label(for='confirmPassword') Confirm Password:
+    input(type='password', id='confirmPassword', for='confirmPassword', name='confirmPassword', minLength='4', required, value=confirmPassword ? confirmPassword : '',)
 
     button(type='submit') Submit
 
