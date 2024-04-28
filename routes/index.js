@@ -1,17 +1,33 @@
 var express = require('express');
-const expressAsyncHandler = require('express-async-handler');
+const asyncHandler = require('express-async-handler');
 var router = express.Router();
 const userController = require('../controllers/userController');
 const messageController = require('../controllers/messageController');
 const passport = require('passport');
+const Message = require('../models/message');
+const User = require('../models/user');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/',  asyncHandler ( async (req, res, next) => {
+  const messages = await Message.find();
+  const newMessages = await Promise.all (messages.map (async (message) => {
+    const author = await User.findById(message.author);
+    const newMessage = {
+      title: message.title,
+      message: message.message,
+      author: message.author,
+      dateUploaded: message.dateUploaded,
+      authorUsername: author.username,
+    }
+    return newMessage;
+  }));
+
   res.render('index', {
     title: 'Members Only',
+    messages: newMessages,
     user: req.user,
   });
-});
+}));
 
 router.get('/log-in', userController.logInGet);
 router.post('/log-in', passport.authenticate('local', { failureRedirect: '/log-in', successRedirect: '/' }), );
