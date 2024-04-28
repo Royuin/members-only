@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');console.log
 const User = require('../models/user');
 const asyncHandler = require('express-async-handler');
 const genPassword = require('../lib/passwordUtils').genPassword;
@@ -20,6 +20,9 @@ exports.signUpPost =  [
   body('lastName', 'Last name must not be empty.').trim().notEmpty().escape(),
   body('username', 'Username must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
   body('password', 'Password must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
+  body('confirmPassword', 'Passwords must match.').custom((value, { req }) => {
+    return value === req.body.password;
+  }),
 
   asyncHandler( async (req, res, next) => {
     const errors = validationResult(req);
