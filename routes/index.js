@@ -32,6 +32,8 @@ router.get('/',  asyncHandler ( async (req, res, next) => {
 router.get('/log-in', userController.logInGet);
 router.post('/log-in', passport.authenticate('local', { failureRedirect: '/log-in', successRedirect: '/' }), );
 
+router.get('/logout', userController.logOut);
+
 router.get('/sign-up', userController.signUpGet); 
 router.post('/sign-up', userController.signUpPost);
 
