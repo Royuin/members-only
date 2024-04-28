@@ -30,7 +30,15 @@ exports.signUpPost =  [
   body('password', 'Password must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
   body('confirmPassword', 'Passwords must match.').custom((value, { req }) => {
     return value === req.body.password;
-  }),
+  }).escape(),
+  body('isMember', 'Wrong passcode please try again, or sign up without being a member.')
+  .optional({checkFalsy: true})
+  .custom(value => {
+    if (value) {
+    return value === process.env.MEMBER_PASSCODE;
+    } 
+  })
+  .escape(),
 
   asyncHandler( async (req, res, next) => {
     const errors = validationResult(req);
@@ -59,19 +67,19 @@ exports.signUpPost =  [
     } else {
       const hash = await genPassword(req.body.password);
 
+      const isMember = req.body.isMember === process.env.MEMBER_PASSCODE;
+
       const newUser = new User({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         username: req.body.username,
         hash: hash,
-        member: false,
+        member: isMember,
       });
 
       // MAKE USER AUTOMATICALLY LOGIN WHEN ACCOUNT IS CREATED
       await newUser.save();
-      passport.authenticate('local', { failureRedirect: '/log-in', successRedirect: '/' })
-      req.login
-      // res.redirect('/');
+      res.redirect('/');
     }
   }),
 ];
