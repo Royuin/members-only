@@ -28,17 +28,16 @@ exports.signUpPost =  [
   body('lastName', 'Last name must not be empty.').trim().notEmpty().escape(),
   body('username', 'Username must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
   body('password', 'Password must not be empty and be at least 4 characters long.').trim().isLength({min: 4}).escape(),
-  body('confirmPassword', 'Passwords must match.').custom((value, { req }) => {
+  body('confirmPassword', 'Passwords must match.')
+  .custom((value, { req }) => {
     return value === req.body.password;
   }).escape(),
-  body('isMember', 'Wrong passcode please try again, or sign up without being a member.')
-  .optional({checkFalsy: true})
+  body('isMember', 'Wrong passcode please try again, or sign up without being a member.').optional({checkFalsy: true})
   .custom(value => {
     if (value) {
     return value === process.env.MEMBER_PASSCODE;
     } 
-  })
-  .escape(),
+  }).escape(),
 
   asyncHandler( async (req, res, next) => {
     const errors = validationResult(req);
@@ -68,6 +67,7 @@ exports.signUpPost =  [
       const hash = await genPassword(req.body.password);
 
       const isMember = req.body.isMember === process.env.MEMBER_PASSCODE;
+      const admin = req.body.isAdmin ? true : false
 
       const newUser = new User({
         firstName: req.body.firstName,
@@ -75,6 +75,7 @@ exports.signUpPost =  [
         username: req.body.username,
         hash: hash,
         member: isMember,
+        admin: admin,
       });
 
       // MAKE USER AUTOMATICALLY LOGIN WHEN ACCOUNT IS CREATED
