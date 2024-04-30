@@ -17,8 +17,14 @@ block content
   if(messages)
     ul
       for message in messages
-        h4= message.title
-        p= message.message
-        if(user)
-          p Author: #{message.authorUsername}
-          p Uploaded: #{message.dateUploaded}
+        li
+          h4= message.title
+          p= message.message
+          if(user)
+            p Author: #{message.authorUsername}
+            p Uploaded: #{message.dateUploaded}
+          if(user && user.admin)
+            form(method='POST')
+              label.message-delete(for='messageDelete') message 
+              input.message-delete(id='messageDelete', name='messageDelete', for='messageDelete', value=message.id)
+              button(type='submit') Delete Message
