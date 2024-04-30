@@ -13,6 +13,7 @@ router.get('/',  asyncHandler ( async (req, res, next) => {
   const newMessages = await Promise.all (messages.map (async (message) => {
     const author = await User.findById(message.author);
     const newMessage = {
+      id: message._id,
       title: message.title,
       message: message.message,
       author: message.author,
@@ -29,6 +30,8 @@ router.get('/',  asyncHandler ( async (req, res, next) => {
   });
 }));
 
+router.post('/', messageController.deleteMessage);
+
 router.get('/log-in', userController.logInGet);
 router.post('/log-in', passport.authenticate('local', { failureRedirect: '/log-in', successRedirect: '/' }), );
 
@@ -39,5 +42,6 @@ router.post('/sign-up', userController.signUpPost);
 
 router.get('/create-message', messageController.createMessageGet);
 router.post('/create-message', messageController.createMessagePost);
+
 
 module.exports = router;
