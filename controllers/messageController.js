@@ -33,3 +33,9 @@ exports.createMessagePost = [
     }
   }),
 ];
+
+exports.deleteMessage = asyncHandler ( async (req, res, next) => {
+  const message = await Message.findById(req.body.messageDelete);
+  await message.deleteOne();
+  res.redirect('/');
+});
